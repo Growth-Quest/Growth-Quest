@@ -4,17 +4,14 @@ import cors from 'cors';
 
 const app = express();
 
+const port = Number(process.env.PORT);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use('/', router);
 
-
-app.listen(3000, '0.0.0.0', () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`Server running on http://localhost:3000`);
 });
-
-// app.listen(3000, 0.0.0.0, () => {
-//   console.log('server is running at http://localhost:3000');
-// });
