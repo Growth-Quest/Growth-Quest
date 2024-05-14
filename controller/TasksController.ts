@@ -18,7 +18,7 @@ class TasksController {
 
   async getTaskByUser(req: express.Request, res: express.Response) {
     try {
-      const user_id = req.body.user_id;
+      const user_id = req.params.user_id;
       const result = await TasksService.getTaskByUser(user_id);
       if ("error" in result) {
         res.status(404).send(result);
