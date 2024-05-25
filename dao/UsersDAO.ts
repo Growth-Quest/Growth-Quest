@@ -3,12 +3,10 @@ const prisma = new PrismaClient();
 
 class UsersDAO {
   async getAllUsers() {
-    const prisma = new PrismaClient();
     return prisma.user.findMany();
   }
 
   async getUserById(id: string) {
-    const prisma = new PrismaClient();
     return prisma.user.findUnique({
       where: {
         id: id,
@@ -35,7 +33,6 @@ class UsersDAO {
 }
 
   async updateUser(id: string, user: any) {
-    const prisma = new PrismaClient();
     return prisma.user.update({
       where: {
         id: id,
@@ -45,7 +42,6 @@ class UsersDAO {
   }
   
   async getUserByEmail(email: string) {
-    const prisma = new PrismaClient();
     return prisma.user.findUnique({
       where: {
         email: email,
@@ -54,14 +50,11 @@ class UsersDAO {
   }
 
   async deleteUser(id: string) {
-    const prisma = new PrismaClient();
     return prisma.user.delete({
       where: {
         id: id,
       },
     });
-
-
   }
 }
 

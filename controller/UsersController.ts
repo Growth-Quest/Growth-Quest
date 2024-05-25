@@ -46,23 +46,16 @@ class UsersController {
     }
   }
 
-  // async createUser(req: express.Request, res: express.Response) {
-  //   try {
-  //     const user = req.body;
-  //     const result = await UsersService.createUser(user);
-  //     res.status(201).send(result);
-  //   } catch (error) {
-  //     console.error(`Error occurred: ${error}`);
-  //     res.status(500).send({ "error": error });
-  //   }
-  // }
-
   async updateUser(req: express.Request, res: express.Response) {
     try {
       const updatedUser = req.body;
       const id = req.params.id;
       const result = await UsersService.updateUser(id, updatedUser);
-      res.status(200).send(result);
+      if ("error" in result) {
+        res.status(404).send(result);
+      } else {
+        res.status(200).send(result);
+      }
     } catch (error) {
       console.error(`Error occurred: ${error}`);
       res.status(500).send({ "error": error });
@@ -73,7 +66,11 @@ class UsersController {
     try {
       const id = req.params.id;
       const result = await UsersService.deleteUser(id);
-      res.status(204).send(result);
+      if ("error" in result) {
+        res.status(404).send(result);
+      } else {
+        res.status(204).send(result);
+      }
     } catch (error) {
       console.error(`Error occurred: ${error}`);
       res.status(500).send({ "error": error });
@@ -85,9 +82,12 @@ class UsersController {
       const email = req.body.email;
       const password = req.body.password;
       const username = req.body.username;
-      const result = await UsersService.registerUser(email,  username, password);
-       
-      res.status(201).send(result);
+      const result = await UsersService.registerUser(email, username, password);
+      if (result.error) {
+        res.status(400).send(result);
+      } else {
+        res.status(201).send(result);
+      }
     } catch (error) {
       console.error(`Error occurred: ${error}`);
       res.status(500).send({ "error": error });
@@ -99,7 +99,7 @@ class UsersController {
     try {
       const user = await UsersService.userLogin(username, password);
       if (!user || typeof user === "string") {
-        res.status(404).send(user);
+        res.status(404).send({ error: user });
       } else {
         const userId = user.id;
         const token = jwt.sign(
@@ -114,8 +114,6 @@ class UsersController {
       res.status(500).send("Internal Server Error.");
     }
   }
-  
-  
 }
 
 export default new UsersController();

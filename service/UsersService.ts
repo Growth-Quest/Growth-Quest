@@ -20,7 +20,6 @@ class UsersService {
     try {
       const result = await UsersDAO.getUserById(id);
       if (result === null) {
-        console.error(`User not found with id: ${id}`);
         return { "error": "User not found" }
       } else {
         return result;
@@ -37,7 +36,7 @@ class UsersService {
     }
     try {
       const user = await UsersDAO.getUserByUsername(username);
-      if (!user) {
+      if (!user || user == null) {
         return { error: "User not found." };
       } else {
         return user;
@@ -50,8 +49,13 @@ class UsersService {
 
   async updateUser(id: string, user: any) {
     try {
-      const result = await UsersDAO.updateUser(id, user);
-      return result;
+      const userExists = await UsersDAO.getUserById(id);
+      if (!userExists || userExists === null) {
+        return { "error": "User not found" }
+      } else {
+        const result = await UsersDAO.updateUser(id, user);
+        return result;
+      }
     } catch (error) {
       console.error(`Error occurred: ${error}`);
       return { "error": error }
@@ -60,8 +64,13 @@ class UsersService {
 
   async deleteUser(id: string) {
     try {
-      const result = await UsersDAO.deleteUser(id);
-      return result;
+      const userExists = await UsersDAO.getUserById(id);
+      if (!userExists || userExists === null) {
+        return { "error": "User not found" }
+      } else {
+        const result = await UsersDAO.deleteUser(id);
+        return result;
+      }
     } catch (error) {
       console.error(`Error occurred: ${error}`);
       return { "error": error }
@@ -69,16 +78,17 @@ class UsersService {
   }
 
   async registerUser(email: string, username: string, password: string) {
-    if (!email || !username || !password) {
-      return { error: "Bad Request." };
-    }
     try {
-      const checkUser = await UsersDAO.getUserByEmail(email);
-      if (checkUser) {
-        return { error: "User already exists." };
+      if (!email || email === '' || !username || username === '' || !password || password === '') {
+        return { error: "Bad Request." };
+      }
+      const checkUserEmail = await UsersDAO.getUserByEmail(email);
+      const checkUsername = await UsersDAO.getUserByUsername(username);
+      if (checkUserEmail !== null) {
+        return { error: "Email already exists." };
+      }else if (checkUsername !== null) {
+        return { error: "Username already exists." };
       } else {
-        console.log(email, username, password)
-        // Bcrypt the password
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser: any = await UsersDAO.createUser(
           email,
@@ -95,10 +105,12 @@ class UsersService {
   }
 
   async userLogin(username: string, password: string) {
-    const user = await this.getUserByUserName(username);
-    if ("error" in user) return user.error;
+    const user = await UsersDAO.getUserByUsername(username);
+    if (!user || user === null) return "User not found.";
     if (await bcrypt.compare(password, user.password)) {
       return user;
+    } else {
+      return "Invalid password.";
     }
   }
 }
