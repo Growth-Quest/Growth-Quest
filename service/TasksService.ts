@@ -1,4 +1,5 @@
 import TasksDAO from "../dao/TasksDAO";
+import PlantsDAO from "../dao/PlantsDAO";
 
 interface UserTask {
   user_id: string,
@@ -107,6 +108,63 @@ class TasksService {
     try {
       const result = await TasksDAO.updateTaskStatus(status, task_id);
       return result;
+    } catch (error) {
+      console.error(`Error occured: ${error}`);
+      return { "error": error }
+    }
+  }
+
+  async doneTask(task_id: string, plant_id: string) {
+    try {
+      const plant = await PlantsDAO.getPlantById(plant_id);
+      const task = await TasksDAO.getTaskById(task_id);
+      if (!task || !plant) {
+        return { "error": "Task or Plant not found" }
+      }
+      const plantLevel: number = plant.level;
+      const plantCurrentExp: number = plant.current_exp;
+      const plantMaxExp: number = plant.max_exp;
+      const newPlantExp: number = plantCurrentExp + task.exp_value;
+      const plantHealth: number = plant.health_points;
+      if (plantHealth < 100) {
+        await PlantsDAO.updatePlant(plant_id, {
+          health_points: plantHealth + 1,
+        })
+      }
+      if (newPlantExp >= plantMaxExp) {
+        await PlantsDAO.updatePlant(plant_id, {
+          level: plantLevel + 1,
+          current_exp: newPlantExp - plantMaxExp,
+          max_exp: Math.floor(plantMaxExp + (plantMaxExp / 5)),
+        })
+        return await TasksDAO.updateTaskStatus("done", task_id);
+      } else {
+        const response = await PlantsDAO.updatePlant(plant_id, {
+          current_exp: newPlantExp,
+        })
+        console.log("response: ", response);
+        return await TasksDAO.updateTaskStatus("done", task_id);
+      }
+    } catch (error) {
+      console.error(`Error occured: ${error}`);
+      return { "error": error }
+    }
+  }
+
+  async taskFailed(task_id: string, plant_id: string) {
+    try {
+      const plant = await PlantsDAO.getPlantById(plant_id);
+      const task = await TasksDAO.getTaskById(task_id);
+      if (!task || !plant) {
+        return { "error": "Task or Plant not found" }
+      }
+      const plantHealth: number = plant.health_points;
+      if (plantHealth > 0) {
+        await PlantsDAO.updatePlant(plant_id, {
+          health_points: plantHealth - 1,
+        })
+      }
+      return await TasksDAO.updateTaskStatus("failed", task_id);
     } catch (error) {
       console.error(`Error occured: ${error}`);
       return { "error": error }

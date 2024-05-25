@@ -44,15 +44,6 @@ class TasksDAO {
   }
 
   async createTask(data: any, user_id: string) {
-    if (data.type === "easy") {
-      data.exp_value = 1;
-    } else if (data.type === "medium") {
-      data.exp_value = 2;
-    } else if (data.type === "hard") {
-      data.exp_value = 3;
-    } else {
-      data.exp_value = 0;
-    }
 
     const prisma = new PrismaClient();
     return prisma.tasks.create({

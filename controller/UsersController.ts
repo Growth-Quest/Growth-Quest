@@ -1,6 +1,7 @@
 import express from 'express';
 import UsersService from '../service/UsersService';
 import jwt from "jsonwebtoken";
+import PlantsService from '../service/PlantsService';
 
 class UsersController {
   async getAllUsers(req: express.Request, res: express.Response) {
@@ -102,12 +103,18 @@ class UsersController {
         res.status(404).send({ error: user });
       } else {
         const userId = user.id;
-        const token = jwt.sign(
-          { userId },
-          process.env.JWT_SECRET || "default-secret"
-        );
-        const send = { userId, token };
-        res.status(200).send(send);
+        const plant = await PlantsService.getPlantByUserId(userId);
+        if ("error" in plant) {
+          res.status(404).send(plant);
+        } else {
+          const plant_id = plant.id;
+          const token = jwt.sign(
+            { userId },
+            process.env.JWT_SECRET || "default-secret"
+          );
+          const send = { userId, token, plant_id };
+          res.status(200).send(send);
+        }
       }
     } catch (error) {
       console.error(error);

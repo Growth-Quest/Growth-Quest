@@ -99,6 +99,28 @@ class TasksController {
     }
   }
 
+  async doneTask(req: express.Request, res: express.Response) {
+    try {
+      const { task_id, plant_id,  } = req.body;
+      const result = await TasksService.doneTask(task_id, plant_id);
+      res.status(200).send(result);
+    } catch (error) {
+      console.error(`Error occurred: ${error}`);
+      res.status(500).send({ "error": error });
+    }
+  }
+
+  async taskFailed(req: express.Request, res: express.Response) {
+    try {
+      const { task_id, plant_id, } = req.body;
+      const result = await TasksService.taskFailed(task_id, plant_id);
+      res.status(200).send(result);
+    } catch (error) {
+      console.error(`Error occurred: ${error}`);
+      res.status(500).send({ "error": error });
+    }
+  }
+
   async updateTaskStatus(req: express.Request, res: express.Response) {
     try {
       const status = req.body.status;
