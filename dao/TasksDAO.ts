@@ -33,11 +33,12 @@ class TasksDAO {
     });
   }
 
-  async getTaskByStatus(status: string) {
+  async getTaskByStatus(status: string, user_id: string) {
     const prisma = new PrismaClient();
     return prisma.tasks.findMany({
       where: {
         status: status,
+        user_id: user_id,
       },
     });
   }

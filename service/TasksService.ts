@@ -68,9 +68,9 @@ class TasksService {
     }
   }
 
-  async getTaskByStatus(status: string) {
+  async getTaskByStatus(status: string, user_id: string) {
     try {
-      const result = await TasksDAO.getTaskByStatus(status);
+      const result = await TasksDAO.getTaskByStatus(status, user_id);
       if (result.length === 0) {
         console.error(`Task not found with status: ${status}`);
         return { "error": "Task not found" }

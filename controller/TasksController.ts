@@ -63,7 +63,8 @@ class TasksController {
   async getTaskByStatus(req: express.Request, res: express.Response) {
     try {
       const status = req.body.status;
-      const result = await TasksService.getTaskByStatus(status);
+      const user_id = req.body.user_id;
+      const result = await TasksService.getTaskByStatus(status, user_id);
       if ("error" in result) {
         res.status(404).send(result);
       } else {
