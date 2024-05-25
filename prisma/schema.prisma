@@ -14,7 +14,7 @@ datasource db {
 }
 
 model User {
-  id        String      @id @default(cuid())
+  id        String   @id @default(cuid())
   username  String   @unique
   email     String   @unique
   password  String
@@ -26,21 +26,21 @@ model User {
 }
 
 model Plant {
-  id          String   @id @default(cuid())
-  user        User     @relation(fields: [user_id], references: [id])
-  user_id     String   @unique
-  name        String   @default("plant")
-  level       Int      @default(1)
-  current_exp Int      @default(0)
-  max_exp     Int      @default(100)
-  condition   String   @default("healthy")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(cuid())
+  user          User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id       String   @unique
+  name          String   @default("plant")
+  health_points Int      @default(100)
+  level         Int      @default(1)
+  current_exp   Int      @default(0)
+  max_exp       Int      @default(100)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 model Tasks {
   id          String   @id @default(cuid())
-  user        User     @relation(fields: [user_id], references: [id])
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id     String
   task_name   String
   description String
