@@ -1,13 +1,13 @@
 import { PrismaClient } from "@prisma/client";
 
+const prisma = new PrismaClient();
+
 class TasksDAO {
   async getAllTasks() {
-    const prisma = new PrismaClient();
     return prisma.tasks.findMany();
   }
 
   async getTaskById(id: string) {
-    const prisma = new PrismaClient();
     return prisma.tasks.findUnique({
       where: {
         id: id,
@@ -16,7 +16,6 @@ class TasksDAO {
   }
 
   async getTaskByUser(user_id: string) {
-    const prisma = new PrismaClient();
     return prisma.tasks.findMany({
       where: {
         user_id: user_id,
@@ -25,7 +24,6 @@ class TasksDAO {
   }
 
   async getTaskByType(type: string) {
-    const prisma = new PrismaClient();
     return prisma.tasks.findMany({
       where: {
         type: type,
@@ -34,7 +32,6 @@ class TasksDAO {
   }
 
   async getTaskByStatus(status: string, user_id: string) {
-    const prisma = new PrismaClient();
     return prisma.tasks.findMany({
       where: {
         status: status,
@@ -45,7 +42,6 @@ class TasksDAO {
 
   async createTask(data: any, user_id: string) {
 
-    const prisma = new PrismaClient();
     return prisma.tasks.create({
       data: {
         task_name: data.task_name,
@@ -62,7 +58,6 @@ class TasksDAO {
   }
 
   async updateTask(id: string, task: any) {
-    const prisma = new PrismaClient();
     return prisma.tasks.update({
       where: {
         id: id,
@@ -72,7 +67,6 @@ class TasksDAO {
   }
 
   async updateTaskStatus(status: string, task_id: string) {
-    const prisma = new PrismaClient();
     return prisma.tasks.updateMany({
       where: {
         id: task_id,
@@ -84,7 +78,6 @@ class TasksDAO {
   }
 
   async deleteTask(id: string) {
-    const prisma = new PrismaClient();
     return prisma.tasks.delete({
       where: {
         id: id,

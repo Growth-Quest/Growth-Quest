@@ -64,6 +64,7 @@ class TasksController {
     try {
       const status = req.body.status;
       const user_id = req.body.user_id;
+      console.log("status, user_id: ", status, user_id)
       const result = await TasksService.getTaskByStatus(status, user_id);
       if ("error" in result) {
         res.status(404).send(result);
