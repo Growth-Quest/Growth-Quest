@@ -88,3 +88,10 @@ class TasksDAO {
 
 export default new TasksDAO()
 
+// const taskDao = new TasksDAO();
+
+// async function log() {
+//   console.log(await taskDao.getTaskByStatus("ongoing", "clwm6eqwo0000tt005npcqlrf"));
+// }
+
+// log();

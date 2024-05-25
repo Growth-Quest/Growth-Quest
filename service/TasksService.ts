@@ -183,3 +183,11 @@ class TasksService {
 }
 
 export default new TasksService
+
+// const taskService = new TasksService();
+
+// async function log() {
+//   console.log(await taskService.getTaskByStatus("failed", "clwm6eqwo0000tt005npcqlrf"));
+// }
+
+// log();
