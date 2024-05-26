@@ -67,7 +67,7 @@ class TasksController {
       console.log("status, user_id: ", status, user_id)
       const result = await TasksService.getTaskByStatus(status, user_id);
       if ("error" in result) {
-        res.status(404).send(result);
+        res.status(204).send(result);
       } else {
         res.status(200).send(result);
       }
