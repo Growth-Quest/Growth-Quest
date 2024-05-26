@@ -118,6 +118,7 @@ class TasksService {
     try {
       const plant = await PlantsDAO.getPlantById(plant_id);
       const task = await TasksDAO.getTaskById(task_id);
+      console.log("task_id, plant_id: ", task_id, plant_id)
       console.log("task", task)
       if (!task || !plant) {
         return { "error": "Task or Plant not found" }
