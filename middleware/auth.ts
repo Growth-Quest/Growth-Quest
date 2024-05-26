@@ -1,27 +1,30 @@
+import express from 'express';
 import jwt from 'jsonwebtoken';
 
-export const auth = (req: any, res: any, next: any) => {
-  const authHeader = req.headers['authorization'];
+// Define an interface for the extended Request type
+interface AuthenticatedRequest extends express.Request {
+  user?: any; // Replace 'any' with the actual type of your user object
+}
 
-  if (!authHeader) {
-    return res.status(401).send('Access Denied: No Token Provided!');
+export const auth = (req: AuthenticatedRequest, res: express.Response, next: express.NextFunction) => {
+  const tokenHeader = req.header('Authorization');
+
+  if (!tokenHeader) {
+    return res.status(401).json({ message: 'Unauthorized - No token provided' });
   }
 
-  const token = authHeader.split(' ')[1];
-
-  if (!token) {
-    return res.status(401).send('Access Denied: Malformed Token!');
-  }
+  // Remove "Bearer " prefix
+  const token = tokenHeader.replace('Bearer ', '');
 
   try {
-    jwt.verify(token, 'super secret key here', (err: any, user: any) => {
-      if (err) {
-        return res.status(403).send('Invalid Token');
-      }
-      req.user = user;
-      next();
-    });
+    const secretKey = process.env.SECRET_KEY || 'aaronpogi';
+    const decoded = jwt.verify(token, secretKey);
+
+    // Attach the decoded user information to the request object
+    req.user = decoded;
+
+    next();
   } catch (error) {
-    res.status(400).send('Invalid Token');
+    return res.status(401).json({ message: 'Unauthorized - Invalid token' });
   }
 };
