@@ -118,6 +118,7 @@ class TasksService {
     try {
       const plant = await PlantsDAO.getPlantById(plant_id);
       const task = await TasksDAO.getTaskById(task_id);
+      console.log("task", task)
       if (!task || !plant) {
         return { "error": "Task or Plant not found" }
       }
@@ -126,6 +127,7 @@ class TasksService {
       const plantMaxExp: number = plant.max_exp;
       const newPlantExp: number = plantCurrentExp + task.exp_value;
       const plantHealth: number = plant.health_points;
+      console.log("plant details: ", plantLevel, plantCurrentExp, plantMaxExp, newPlantExp, plantHealth)
       if (plantHealth < 100) {
         await PlantsDAO.updatePlant(plant_id, {
           health_points: plantHealth + 1,

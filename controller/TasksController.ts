@@ -104,7 +104,7 @@ class TasksController {
     try {
       const { task_id, plant_id, user_id } = req.body;
       await TasksService.doneTask(task_id, plant_id);
-      const result = TasksService.getTaskByStatus("in_progress", user_id);
+      const result = TasksService.getTaskByStatus("in progress", user_id);
       res.status(200).send(result);
     } catch (error) {
       console.error(`Error occurred: ${error}`);
