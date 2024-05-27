@@ -68,6 +68,10 @@ class PlantsService {
   async deletePlant(id: string) {
     try {
       const result = await PlantsDAO.deletePlant(id);
+      if (result === null) {
+        console.error(`Plant not found with id: ${id}`);
+        return { "error": "Plant not found" }
+      }
       return result;
     } catch (error) {
       console.error(`Error occured: ${error}`);

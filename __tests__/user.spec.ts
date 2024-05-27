@@ -1,7 +1,7 @@
 import supertest from 'supertest';
 import { app, server } from '../index';
 import { PrismaClient } from '@prisma/client';
-
+ 
 const prisma = new PrismaClient();
 
 let user: { id: string; email: any; username: any; password?: string; role?: string; createdAt?: Date; updatedAt?: Date; };

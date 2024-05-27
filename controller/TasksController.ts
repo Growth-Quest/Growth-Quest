@@ -104,7 +104,8 @@ class TasksController {
     try {
       const { task_id, plant_id, user_id } = req.body;
       await TasksService.doneTask(task_id, plant_id);
-      const result = TasksService.getTaskByStatus("in progress", user_id);
+      // const result = TasksService.getTaskByStatus("completed", user_id);
+      const result = await TasksService.getTaskById(task_id);
       res.status(200).send(result);
     } catch (error) {
       console.error(`Error occurred: ${error}`);
@@ -115,7 +116,9 @@ class TasksController {
   async taskFailed(req: express.Request, res: express.Response) {
     try {
       const { task_id, plant_id, } = req.body;
-      const result = await TasksService.taskFailed(task_id, plant_id);
+      await TasksService.taskFailed(task_id, plant_id);
+      const result = await TasksService.getTaskById(task_id);
+      console.log("result", result);
       res.status(200).send(result);
     } catch (error) {
       console.error(`Error occurred: ${error}`);

@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import UsersDAO from "./UsersDAO";
 
 class Plant {
   async getAllPlants() {
@@ -54,3 +55,14 @@ class Plant {
 }
 
 export default new Plant();
+
+// const plant = new Plant();
+// async function main() {
+//   const user = await UsersDAO.createUser("email2@email.com", 'Usertest2', 'password123');
+//   const newPlant = await plant.createPlant(user.id);
+//   console.log(await plant.getAllPlants());
+//   console.log(await plant.deletePlant(newPlant.id))
+//   console.log(await plant.getPlantById(user.id));
+// }
+
+// main();

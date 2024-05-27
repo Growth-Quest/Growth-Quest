@@ -48,7 +48,7 @@ class PlantController {
 		try {
 			const plant = req.body;
 			const result = await PlantsService.createPlant(plant);
-			res.status(201).send(result);
+			res.status(201).send({message: 'Plant created successfully', data: result});
 		} catch (error) {
 			console.error(`Error occurred: ${error}`);
 			res.status(500).send({ "error": error });
@@ -69,7 +69,11 @@ class PlantController {
 	async deletePlant(req: Request, res: Response) {
 		try {
 			const result = await PlantsService.deletePlant(req.params.id);
-			res.status(200).send(result);
+			if ("error" in result) {
+				res.status(404).send({ error : "Plant not found" });
+			} else {
+				res.status(200).send({message: 'Plant deleted successfully', data: result});
+			}
 		} catch (error) {
 			console.error(`Error occurred: ${error}`);
 			res.status(500).send({ "error": error });
